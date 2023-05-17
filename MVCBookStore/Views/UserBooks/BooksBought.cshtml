@@ -1,0 +1,84 @@
+﻿@model IEnumerable<MVCBookStore.Models.Book>
+
+@{
+    ViewData["Title"] = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>My Books List</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            @foreach (var item in Model)
+            {
+                @if (item.FrontPage != null)
+                {
+                    <div class="card" style="width: 200px;margin: 10px; float:left">
+                        <img class="card-img-top" src="~/images/@item.FrontPage" height="300px" width="200px" style="padding: 10px" asp-append-version="true" />
+                    </div>
+                }
+                else
+                {
+                    <img class="card-img-top" src="" height="300px" width="190px" style="padding: 10px" asp-append-version="true" />
+
+                }
+            }
+        </tr>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.YearPublished)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Author)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.YearPublished)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Author.FullName)
+                </td>
+                <td>
+                    @*@if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> <span>|</span>
+                }*@
+                    <button><a asp-controller="Books" asp-action="Details" asp-route-id="@item.Id">Details</a> </button>
+                    @if (item.DownloadUrl != null && item.DownloadUrl != "" && item.DownloadUrl != " ")
+                    {
+                        <button>
+                            <form asp-controller="Books" asp-action="DownloadFile">
+                                <input type="hidden" name="downloadUrl" value="@item.DownloadUrl" />
+                                <input type="submit" value="Download Book PDF" />
+                            </form>
+                        </button>
+                    }
+                    else
+                    {
+                        <button disabled>Book Not Available At The Moment.</button>
+                    }
+                    <button><a asp-controller="Reviews" asp-action="WriteReviewFromUser" asp-route-bookId="@item.Id">Write a Review!</a> </button>
+                    @*@if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                <span>|</span>
+
+                <a asp-action="Delete" asp-route-bookid="@item.Id">Delete</a>
+                } *@
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

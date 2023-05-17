@@ -1,0 +1,88 @@
+﻿@model MVCBookStore.ViewModels.BookGenresEditViewModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Book</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Book.Title" class="control-label"></label>
+                <input asp-for="Book.Title" class="form-control" />
+                <span asp-validation-for="Book.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Book.YearPublished" class="control-label"></label>
+                <input asp-for="Book.YearPublished" class="form-control" />
+                <span asp-validation-for="Book.YearPublished" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Book.NumPages" class="control-label"></label>
+                <input asp-for="Book.NumPages" class="form-control" />
+                <span asp-validation-for="Book.NumPages" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Book.Description" class="control-label"></label>
+                <input asp-for="Book.Description" class="form-control" />
+                <span asp-validation-for="Book.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Book.Publisher" class="control-label"></label>
+                <input asp-for="Book.Publisher" class="form-control" />
+                <span asp-validation-for="Book.Publisher" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Book.AuthorId" class="control-label">Author</label>
+                <select asp-for="Book.AuthorId" class="form-control" asp-items="ViewBag.AuthorId"></select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="SelectedGenres" class="control-label">Genres</label>
+                <select asp-for="SelectedGenres" class="form-control js-example-basic-multiple"
+                        asp-items="Model.GenreList"> </select>
+                <span asp-validation-for="SelectedGenres" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Book.FrontPage" class="control-label"></label>
+                <input type="file" name="imagefile" />
+                @if (ViewBag.Message != null)
+                {
+                    <div class="alert" style="margin-top:20px">
+                        @ViewBag.Message
+                    </div>
+                }
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Book.DownloadUrl" class="control-label"></label>
+                <input type="file" name="pdffile" />
+                @if (ViewBag.Message != null)
+                {
+                    <div class="alert" style="margin-top:20px">
+                        @ViewBag.Message
+                    </div>
+                }
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,67 @@
+﻿@model IEnumerable<MVCBookStore.Models.Review>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Reviews List</h1>
+
+@*@if (User.Identity.IsAuthenticated && (User.IsInRole("Admin")))
+{
+    <button>
+        <a asp-action="Create">Create New</a>
+    </button>
+}*@
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AppUser)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Comment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Rating)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Book)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AppUser)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Comment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rating)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Book.Title)
+                </td>
+                <td>
+                    @if (User.Identity.IsAuthenticated && (User.IsInRole("User")))
+                    {
+                        <button><a asp-action="Edit" asp-route-id="@item.Id">Edit</a></button>
+                        <span>|</span>
+                    }
+                    <button><a asp-action="Details" asp-route-id="@item.Id">Details</a></button>
+                    @if (User.Identity.IsAuthenticated && (User.IsInRole("User")))
+                    {
+                        <span>|</span>
+                        <button><a asp-action="Delete" asp-route-id="@item.Id">Delete</a></button>
+                    }
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

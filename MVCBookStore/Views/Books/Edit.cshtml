@@ -1,0 +1,107 @@
+﻿@model MVCBookStore.ViewModels.BookGenresEditViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Book</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Book.Id" />
+            <div class="form-group">
+                <label asp-for="Book.Title" class="control-label"></label>
+                <input asp-for="Book.Title" class="form-control" />
+                <span asp-validation-for="Book.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Book.YearPublished" class="control-label"></label>
+                <input asp-for="Book.YearPublished" class="form-control" />
+                <span asp-validation-for="Book.YearPublished" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Book.NumPages" class="control-label"></label>
+                <input asp-for="Book.NumPages" class="form-control" />
+                <span asp-validation-for="Book.NumPages" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Book.Description" class="control-label"></label>
+                <input asp-for="Book.Description" class="form-control" />
+                <span asp-validation-for="Book.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Book.Publisher" class="control-label"></label>
+                <input asp-for="Book.Publisher" class="form-control" />
+                <span asp-validation-for="Book.Publisher" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Book.AuthorId" class="control-label">Author</label>
+                <select asp-for="Book.AuthorId" class="form-control" asp-items="ViewBag.AuthorId"></select>
+                <span asp-validation-for="Book.AuthorId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Genres</label>
+                <select asp-for="SelectedGenres" class="form-control js-example-basic-multiple"
+                        asp-items="Model.GenreList"> </select>
+                <span asp-validation-for="SelectedGenres" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Book.FrontPage" class="control-label"></label>
+                <input type="file" name="imageFile" />
+                @if (ViewBag.Message != null)
+                {
+                    <div class="alert" style="margin-top:20px">
+                        @ViewBag.Message
+                    </div>
+                }
+            </div>
+            <div class="form-group">
+                <label asp-for="Book.DownloadUrl" class="control-label"></label>
+                <input type="file" name="pdfFile" />
+                @if (ViewBag.Message != null)
+                {
+                    <div class="alert" style="margin-top:20px">
+                        @ViewBag.Message
+                    </div>
+                }
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@*<form method="post" enctype="multipart/form-data">
+    <input type="file" name="file" />
+    <button type="submit">Upload File</button>
+</form>
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert" style="margin-top:20px">
+        @ViewBag.Message
+    </div>
+}*@
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#SelectedGenres").select2();
+            //$("#SelectedAuthor").select2();
+        });
+    </script>
+}

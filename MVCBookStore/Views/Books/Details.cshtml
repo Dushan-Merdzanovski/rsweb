@@ -1,0 +1,160 @@
+﻿@model MVCBookStore.Models.Book
+@using Microsoft.AspNetCore.Identity
+@using MVCBookStore.Areas.Identity.Data
+@inject SignInManager<MVCBookStoreUser> SignInManager
+@inject UserManager<MVCBookStoreUser> UserManager
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Book</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class="col-sm-10">
+            <strong><em>@Html.DisplayFor(model => model.Title)</em></strong>
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FrontPage)
+        </dt>
+        <dd class="col-sm-10">
+            @if (@Model.FrontPage != null)
+            {
+                <img src="~/images/@Model.FrontPage" height="300px" width="190px" asp-append-version="true" />
+            } else
+            {
+                <p>No picture posted for the Front Page.</p>
+            }
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.YearPublished)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.YearPublished)
+        </dd>
+        <dd>
+
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NumPages)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NumPages)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Publisher)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Publisher)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Author)
+        </dt>
+        <dd class="col-sm-10">
+                <a asp-controller="Authors" asp-action="Details" asp-route-id="@Model.AuthorId"> @Html.DisplayFor(model => model.Author.FullName)</a>
+        </dd>
+        
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.BookGenres)
+        </dt>
+        <dd>
+
+        </dd class="col-sm-10">
+        @foreach(var item in Model.BookGenres)
+        {
+            <a asp-controller="Genres" asp-action="Details" asp-route-id="@item.GenreId">
+                    <li>@item.Genre.GenreName</li>
+            </a> <br/>
+        }
+
+
+        @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("User")))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.DownloadUrl)
+            </dt>
+            <dd class="col-sm-10">
+                @if (Model.DownloadUrl != null && Model.DownloadUrl != "" && Model.DownloadUrl != " ") {
+                    var ownsBook = false;
+                    foreach (var userbookpair in Model.UserBooks)
+                    {
+                        if (userbookpair.AppUser == UserManager.GetUserName(User))
+                        {
+                            ownsBook = true;
+                            break;
+                        }
+                    }
+                    @if (ownsBook || User.IsInRole("Admin"))
+                    {
+                        <form asp-controller="Books" asp-action="DownloadFile">
+                            <p>@Model.DownloadUrl</p>
+                        <input type="hidden" name="downloadUrl" value="@Model.DownloadUrl" />
+                        <input type="submit" value="Download Book PDF" />
+                        </form>
+                    } else
+                    {
+                        <p>You don't have Access to this Book. Buy it first to own it!</p>
+                    }
+                } else
+                {
+                    <p>No Book attached.</p>
+                }
+            </dd>
+        }
+
+        <dt class="col-sm-2">
+           Average Rating
+        </dt>
+        @{
+            var averageRating = Model.Reviews?.Count > 0 ? Model.Reviews.Average(r => r.Rating) : 0;
+            if (averageRating == 0)
+            {
+                <dd class="col-sm-10">No Reviews.</dd>
+            }
+            else
+            {
+                <dd class="col-sm-10">@Math.Round((decimal)averageRating, 2, MidpointRounding.AwayFromZero)</dd>
+            }
+        }
+        <dt class="col-sm-2">
+           @Html.DisplayNameFor(model => model.Reviews)
+        </dt>
+
+        @if (Model.Reviews?.Count == 0)
+        {
+            <dd class="col-sm-10">None.</dd>
+        } else
+        {
+            @foreach(var review in Model.Reviews)
+            {
+                    //<br/>
+                    <hr/>
+                    <dd class="col-sm-10">
+                        <strong>@review.AppUser: </strong>@review.Comment
+                    <br>
+                        <strong>Rating: </strong> @review.Rating
+                    </dd>
+            }
+        }
+    </dl>
+</div>
+<div>
+    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+    {
+       <button><a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a></button>
+       <span>|</span>
+    } 
+   <button><a asp-action="Index">Back to List</a></button> 
+</div>
